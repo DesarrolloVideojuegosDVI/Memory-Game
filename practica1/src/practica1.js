@@ -10,9 +10,31 @@ var MemoryGame = MemoryGame || {};
  */
 MemoryGame = function(gs) {
 
+  this.cards = [];
+  this.finished = false;
+  this.message =
+
+  this.MemoryGame = function(gs){
+    
+  };
+
+  this.initGame = function(){
+
+  };
+
+  this.draw = function(){
+
+  };
+
+  this.loop = function(){
+
+  };
+
+  this.onClikc = function(){
+
+  };
+
 };
-
-
 
 /**
  * Constructora de las cartas del juego. Recibe como parámetro el nombre del sprite que representa la carta.
@@ -21,5 +43,19 @@ MemoryGame = function(gs) {
  * @param {string} id Nombre del sprite que representa la carta
  */
 MemoryGameCard = function(id) {
+  this.MemoryGameCard = function(sprites){
 
+  };
+  this.flip = function(){
+
+  };
+  this.found = function(){
+
+  };
+  this.compareTo = function(){
+
+  };
+  this.draw = function(gs, pos){
+
+  };
 };
