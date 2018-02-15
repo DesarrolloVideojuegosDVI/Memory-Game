@@ -22,7 +22,7 @@ MemoryGame = function(gs) {
   this.initGame = function(){
     //creamos un aleatorio, cogemos la carta del json y guardamos el nombre de la
     //carta en un array dos veces en el numero aleatorio
-    
+
   };
 
   this.draw = function(){
@@ -62,3 +62,15 @@ MemoryGameCard = function(id) {
 
   };
 };
+
+/**
+ * Shuffles array in place. ES6 version
+ * @param {Array} a items An array containing the items.
+ */
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
