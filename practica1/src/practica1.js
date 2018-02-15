@@ -12,14 +12,23 @@ MemoryGame = function(gs) {
 
   this.cards = [];
   this.cardsMapped = []; //vector de boolean
-  this.finished = false;
-  this.message =
+  this.finished;
+  this.message;
 
   this.MemoryGame = function(gs){
-
+   for(let i = 0; i < 9; ++i){
+     let card = new MemoryGameCard(gs.maps[i])
+     for(let j = 0; j < 2; ++j){
+       if(card !== 'back'){
+          this.cards.push(card);
+       }
+     }
+   }
+   //shuffle(this.cards);
   };
 
   this.initGame = function(){
+    this.MemoryGame(gs);
     //creamos un aleatorio, cogemos la carta del json y guardamos el nombre de la
     //carta en un array dos veces en el numero aleatorio
 
