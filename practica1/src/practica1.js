@@ -11,15 +11,18 @@ var MemoryGame = MemoryGame || {};
 MemoryGame = function(gs) {
 
   this.cards = [];
+  this.cardsMapped = []; //vector de boolean
   this.finished = false;
   this.message =
 
   this.MemoryGame = function(gs){
-    
+
   };
 
   this.initGame = function(){
-
+    //creamos un aleatorio, cogemos la carta del json y guardamos el nombre de la
+    //carta en un array dos veces en el numero aleatorio
+    
   };
 
   this.draw = function(){
