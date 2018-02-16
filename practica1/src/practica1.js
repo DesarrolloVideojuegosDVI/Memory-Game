@@ -12,13 +12,9 @@ MemoryGame = function(gs) {
 
   this.gs = gs;
   this.cards = [];
-  this.cardsMapped = []; //vector de boolean
-  this.finished;
+  this.countFounded = 0;
+  this.finished = false;
   this.message;
-
-  this.MemoryGame = function(gs){
-
-  };
 
   this.initGame = function(){
     let types = ["8-ball", "potato", "dinosaur", "kronos", "rocket", "unicorn", "guy", "zeppelin"];
@@ -29,8 +25,9 @@ MemoryGame = function(gs) {
       }
     }
     //mezclamos el array de cartas
-    shuffle(this.cards);
+    //shuffle(this.cards);
     this.loop();
+
   };
 
   this.draw = function(){
@@ -46,11 +43,32 @@ MemoryGame = function(gs) {
   };
 
   this.loop = function(){
-    this.draw();
+    //FIXME no se como se hace para que se ejecute cada 16ms y ademas escuche las peticiones que se hagan a onClick
+    setTimeout(this.draw(), 16);
   };
 
-  this.onClikc = function(){
-
+  this.onClick = function(cardId){
+    let foundOne = false;
+    this.cards[cardId].flip();
+    for(let i = 0; i < this.cards.length && !foundOne; ++i){
+      if(this.cards[i].state === 'up'){
+        //si encuentra una carta que ya este dada la vuelta, las compara
+        //y si son iguales, las marca como 'resultas'
+        if(i !== cardId && this.cards[i].compareTo(this.cards[cardId])){
+          this.cards[i].found();
+          this.cards[cardId].found();
+          foundOne = true;
+          this.countFounded++;
+          if(this.countFounded >= 8)
+            this.finished = true;
+        }else{
+          //damos la vuelta a las dos cartas
+          this.cards[i].flip();
+          this.cards[cardId].flip();
+        }
+      }
+    }
+    this.loop();
   };
 
 };
@@ -63,7 +81,7 @@ MemoryGame = function(gs) {
  */
 MemoryGameCard = function(id) {
   this.id = id;
-  this.state = 'up'
+  this.state = 'down'
 
 /**
  * Esta funcion cambia el estado de la carta
@@ -72,16 +90,10 @@ MemoryGameCard = function(id) {
   this.flip = function(){
     switch(this.state){
       case 'up':
-
+        this.state = 'down';
         break;
-      case 'found':
-
-        break;
-      case '':
-
-        break;
-      default:
-
+      case 'down':
+        this.state = 'up';
         break;
     }
   };
@@ -90,12 +102,13 @@ MemoryGameCard = function(id) {
     this.state = 'found'
   };
 
-  this.compareTo = function(){
-
+  this.compareTo = function(otherCard){
+    return this.id === otherCard.id;
   };
+
   this.draw = function(gs, pos){
     if(this.state === 'down')
-      gs.draw('back');
+      gs.draw('back', pos);
     else
       gs.draw(this.id, pos);
   };
