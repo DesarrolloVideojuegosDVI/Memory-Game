@@ -12,9 +12,11 @@ MemoryGame = function(gs) {
 
   this.gs = gs;
   this.cards = [];
-  this.countFounded = 0;
+  this.countFounded = 0; //variable que guarda el numero de parejas encontradas
   this.finished = false;
-  this.message;
+  this.message = 'Memory Game';
+
+
 
   this.initGame = function(){
     let types = ["8-ball", "potato", "dinosaur", "kronos", "rocket", "unicorn", "guy", "zeppelin"];
@@ -27,48 +29,51 @@ MemoryGame = function(gs) {
     //mezclamos el array de cartas
     //shuffle(this.cards);
     this.loop();
-
   };
 
   this.draw = function(){
     //escribimos el mensaje
-    this.gs.drawMessage("Inicio");
+    this.gs.drawMessage(this.message);
 
     //dibujamos la carta de la posion i del array de cartas
     //en el tablero en la posicion i
     for(i in this.cards){
       this.cards[i].draw(gs,i);
     }
-
+    console.log("Update the screen");
   };
 
   this.loop = function(){
     //FIXME no se como se hace para que se ejecute cada 16ms y ademas escuche las peticiones que se hagan a onClick
-    setTimeout(this.draw(), 16);
+    setInterval(this.draw(),16);
   };
 
   this.onClick = function(cardId){
     let foundOne = false;
     this.cards[cardId].flip();
     for(let i = 0; i < this.cards.length && !foundOne; ++i){
-      if(this.cards[i].state === 'up'){
+      if(i === cardId)
+        foundOne = true;
+      else if(i !== cardId && this.cards[i].state === 'up' && this.cards[i].state !== 'found'){
         //si encuentra una carta que ya este dada la vuelta, las compara
         //y si son iguales, las marca como 'resultas'
-        if(i !== cardId && this.cards[i].compareTo(this.cards[cardId])){
+        if(this.cards[i].compareTo(this.cards[cardId])){
           this.cards[i].found();
           this.cards[cardId].found();
-          foundOne = true;
+          foundOne = true; // paramos de buscar mas cartas
           this.countFounded++;
+          this.message = 'Match found!';
           if(this.countFounded >= 8)
             this.finished = true;
         }else{
-          //damos la vuelta a las dos cartas
+          this.message = 'Try again';
+          foundOne = true;
+          setTimeout(1500);
           this.cards[i].flip();
           this.cards[cardId].flip();
         }
       }
     }
-    this.loop();
   };
 
 };
