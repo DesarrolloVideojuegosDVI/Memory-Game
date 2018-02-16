@@ -10,36 +10,43 @@ var MemoryGame = MemoryGame || {};
  */
 MemoryGame = function(gs) {
 
+  this.gs = gs;
   this.cards = [];
   this.cardsMapped = []; //vector de boolean
   this.finished;
   this.message;
 
   this.MemoryGame = function(gs){
-   for(let i = 0; i < 9; ++i){
-     let card = new MemoryGameCard(gs.maps[i])
-     for(let j = 0; j < 2; ++j){
-       if(card !== 'back'){
-          this.cards.push(card);
-       }
-     }
-   }
-   //shuffle(this.cards);
+
   };
 
   this.initGame = function(){
-    this.MemoryGame(gs);
-    //creamos un aleatorio, cogemos la carta del json y guardamos el nombre de la
-    //carta en un array dos veces en el numero aleatorio
-
+    let types = ["8-ball", "potato", "dinosaur", "kronos", "rocket", "unicorn", "guy", "zeppelin"];
+    //introducimos dos cartas de cada tipo en el array de cartas
+    for(let i = 0; i < 8; ++i){
+      for(let j = 0; j < 2; ++j){
+        this.cards.push(new MemoryGameCard(types[i]));
+      }
+    }
+    //mezclamos el array de cartas
+    shuffle(this.cards);
+    this.loop();
   };
 
   this.draw = function(){
+    //escribimos el mensaje
+    this.gs.drawMessage("Inicio");
+
+    //dibujamos la carta de la posion i del array de cartas
+    //en el tablero en la posicion i
+    for(i in this.cards){
+      this.cards[i].draw(gs,i);
+    }
 
   };
 
   this.loop = function(){
-
+    this.draw();
   };
 
   this.onClikc = function(){
@@ -55,20 +62,42 @@ MemoryGame = function(gs) {
  * @param {string} id Nombre del sprite que representa la carta
  */
 MemoryGameCard = function(id) {
-  this.MemoryGameCard = function(sprites){
+  this.id = id;
+  this.state = 'up'
 
-  };
+/**
+ * Esta funcion cambia el estado de la carta
+ * @return {[type]} [description]
+ */
   this.flip = function(){
+    switch(this.state){
+      case 'up':
 
+        break;
+      case 'found':
+
+        break;
+      case '':
+
+        break;
+      default:
+
+        break;
+    }
   };
+
   this.found = function(){
-
+    this.state = 'found'
   };
+
   this.compareTo = function(){
 
   };
   this.draw = function(gs, pos){
-
+    if(this.state === 'down')
+      gs.draw('back');
+    else
+      gs.draw(this.id, pos);
   };
 };
 
