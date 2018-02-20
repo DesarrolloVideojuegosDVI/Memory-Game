@@ -9,54 +9,48 @@ var MemoryGame = MemoryGame || {};
  * Constructora de MemoryGame
  */
 MemoryGame = function(gs) {
-
   this.gs = gs;
   this.cards = [];
   this.countFounded = 0; //variable que guarda el numero de parejas encontradas
   this.finished = false;
   this.message = 'Memory Game';
 
-
-
   this.initGame = function(){
     let types = ["8-ball", "potato", "dinosaur", "kronos", "rocket", "unicorn", "guy", "zeppelin"];
-    //introducimos dos cartas de cada tipo en el array de cartas
+
     for(let i = 0; i < 8; ++i){
       for(let j = 0; j < 2; ++j){
         this.cards.push(new MemoryGameCard(types[i]));
       }
     }
-    //mezclamos el array de cartas
-    //shuffle(this.cards);
+
+    shuffle(this.cards);
     this.loop();
   };
 
   this.draw = function(){
-    //escribimos el mensaje
     this.gs.drawMessage(this.message);
 
-    //dibujamos la carta de la posion i del array de cartas
-    //en el tablero en la posicion i
     for(i in this.cards){
       this.cards[i].draw(gs,i);
     }
-    console.log("Update the screen");
   };
 
   this.loop = function(){
-    //FIXME no se como se hace para que se ejecute cada 16ms y ademas escuche las peticiones que se hagan a onClick
-    setInterval(this.draw(),16);
+    setInterval(this.draw(), 16);
   };
 
   this.onClick = function(cardId){
     let foundOne = false;
     this.cards[cardId].flip();
+
+    /*
     for(let i = 0; i < this.cards.length && !foundOne; ++i){
-      if(i === cardId)
+      if(i === cardId) {
         foundOne = true;
-      else if(i !== cardId && this.cards[i].state === 'up' && this.cards[i].state !== 'found'){
+      } else if(i !== cardId && this.cards[i].state === 'up' && this.cards[i].state !== 'found') {
         //si encuentra una carta que ya este dada la vuelta, las compara
-        //y si son iguales, las marca como 'resultas'
+        //y si son iguales, las marca como 'resueltas'
         if(this.cards[i].compareTo(this.cards[cardId])){
           this.cards[i].found();
           this.cards[cardId].found();
@@ -74,8 +68,8 @@ MemoryGame = function(gs) {
         }
       }
     }
+    */
   };
-
 };
 
 /**
@@ -86,12 +80,8 @@ MemoryGame = function(gs) {
  */
 MemoryGameCard = function(id) {
   this.id = id;
-  this.state = 'down'
+  this.state = 'down';
 
-/**
- * Esta funcion cambia el estado de la carta
- * @return {[type]} [description]
- */
   this.flip = function(){
     switch(this.state){
       case 'up':
