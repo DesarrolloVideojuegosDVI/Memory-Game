@@ -45,31 +45,33 @@ MemoryGame = function(gs) {
     let foundOne = false;
     this.cards[cardId].flip();
 
-    /*
-    for(let i = 0; i < this.cards.length && !foundOne; ++i){
-      if(i === cardId) {
-        foundOne = true;
-      } else if(i !== cardId && this.cards[i].state === 'up' && this.cards[i].state !== 'found') {
-        //si encuentra una carta que ya este dada la vuelta, las compara
-        //y si son iguales, las marca como 'resueltas'
-        if(this.cards[i].compareTo(this.cards[cardId])){
-          this.cards[i].found();
-          this.cards[cardId].found();
-          foundOne = true; // paramos de buscar mas cartas
-          this.countFounded++;
-          this.message = 'Match found!';
-          if(this.countFounded >= 8)
-            this.finished = true;
-        }else{
-          this.message = 'Try again';
+    if (!this.finished) {
+      for(let i = 0; i < this.cards.length && !foundOne; ++i){
+        if(i === cardId) {
           foundOne = true;
-          setTimeout(1500);
-          this.cards[i].flip();
-          this.cards[cardId].flip();
+        } else if(i !== cardId && this.cards[i].state === 'up' && this.cards[i].state !== 'found') {
+          //si encuentra una carta que ya este dada la vuelta, las compara
+          //y si son iguales, las marca como 'resueltas'
+          if(this.cards[i].compareTo(this.cards[cardId])){
+            this.cards[i].found();
+            this.cards[cardId].found();
+            foundOne = true; // paramos de buscar mas cartas
+            this.countFounded++;
+            this.message = 'Match found!';
+            if(this.countFounded >= 8) {
+              this.finished = true;
+              this.message = 'You Win!!';
+            }
+          }else{
+            this.message = 'Try again';
+            foundOne = true;
+            setTimeout(1500);
+            this.cards[i].flip();
+            this.cards[cardId].flip();
+          }
         }
       }
     }
-    */
   };
 };
 
