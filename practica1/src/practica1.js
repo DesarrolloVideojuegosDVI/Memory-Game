@@ -37,7 +37,8 @@ MemoryGame = function(gs) {
   };
 
   this.loop = function(){
-    setInterval(this.draw(), 16);
+    var self = this;
+    setInterval(function(){self.draw()}, 16);
   };
 
   this.onClick = function(cardId){
