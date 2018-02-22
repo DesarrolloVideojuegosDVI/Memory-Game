@@ -43,45 +43,40 @@ MemoryGame = function(gs) {
   };
 
   this.onClick = function(cardId){
-    //TODO hacerlo bien, quitar el for y declarar una variable que guarde la posicion de
-    //TODO una carta que ya ha sido dada la vuelta y esta a la espera de ser comprobada
-    //TODO por otra.
     var self = this;
     let foundOne = false;
+
     if (!this.finished && !this.lock) {
       this.lock = true;
       this.cards[cardId].flip();
-      for(let i = 0; i < this.cards.length && !foundOne; ++i){
-        if(i === cardId) {
-          foundOne = true;
+
+      if (this.flipped === -1) {
+        this.flipped = cardId;
+        this.lock = false;
+      } else {
+        if (this.cards[this.flipped].compareTo(this.cards[cardId])) {
+          this.cards[this.flipped].found();
+          this.cards[cardId].found();
+          ++this.countFounded;
+          this.message = 'Match found!';
+          this.flipped = -1;
           this.lock = false;
-        } else if(this.cards[i].state === 'up') {
-          //si encuentra una carta que ya este dada la vuelta, las compara
-          //y si son iguales, las marca como 'resueltas'
-          if(this.cards[i].compareTo(this.cards[cardId])){
-            this.cards[i].found();
-            this.cards[cardId].found();
-            foundOne = true; // paramos de buscar mas cartas
-            this.countFounded++;
-            this.message = 'Match found!';
-            if(this.countFounded >= 8) {
-              this.finished = true;
-              this.message = 'You Win!!';
-            }
-            this.lock = false;
-          }else{
-            this.message = 'Try again';
-            foundOne = true;
-            setTimeout(function(){
-              self.cards[i].flip();
-              self.cards[cardId].flip();
-              self.lock = false;
-              console.log("Damos la vuelta a las cartas");
-            },1000);
+
+          if (this.countFounded >= 8) {
+            this.finished = true;
+            this.message = 'You Win!!';
           }
+        } else {
+          this.message = 'Try again';
+
+          setTimeout(function() {
+            self.cards[self.flipped].flip();
+            self.cards[cardId].flip();
+            self.flipped = -1;
+            self.lock = false;
+          }, 1000);
         }
       }
-
     }
   };
 };
