@@ -7,10 +7,6 @@ var MemoryGame = MemoryGame || {};
 
 /**
  * Constructora de MemoryGame
- *
- *
- *
- * 
  */
 MemoryGame = function(gs) {
   this.gs = gs;
@@ -18,6 +14,8 @@ MemoryGame = function(gs) {
   this.countFounded = 0; //variable que guarda el numero de parejas encontradas
   this.finished = false;
   this.message = 'Memory Game';
+  this.lock = false;
+  this.flipped = -1;
 
   this.initGame = function(){
     let types = ["8-ball", "potato", "dinosaur", "kronos", "rocket", "unicorn", "guy", "zeppelin"];
@@ -41,19 +39,23 @@ MemoryGame = function(gs) {
   };
 
   this.loop = function(){
-    var self = this;
-    setInterval(function(){self.draw()}, 16);
+    setInterval(this.draw.bind(this),16);
   };
 
   this.onClick = function(cardId){
+    //TODO hacerlo bien, quitar el for y declarar una variable que guarde la posicion de
+    //TODO una carta que ya ha sido dada la vuelta y esta a la espera de ser comprobada
+    //TODO por otra.
+    var self = this;
     let foundOne = false;
-    this.cards[cardId].flip();
-
-    if (!this.finished) {
+    if (!this.finished && !this.lock) {
+      this.lock = true;
+      this.cards[cardId].flip();
       for(let i = 0; i < this.cards.length && !foundOne; ++i){
         if(i === cardId) {
           foundOne = true;
-        } else if(i !== cardId && this.cards[i].state === 'up' && this.cards[i].state !== 'found') {
+          this.lock = false;
+        } else if(this.cards[i].state === 'up') {
           //si encuentra una carta que ya este dada la vuelta, las compara
           //y si son iguales, las marca como 'resueltas'
           if(this.cards[i].compareTo(this.cards[cardId])){
@@ -66,15 +68,20 @@ MemoryGame = function(gs) {
               this.finished = true;
               this.message = 'You Win!!';
             }
+            this.lock = false;
           }else{
             this.message = 'Try again';
             foundOne = true;
-            setTimeout(1500);
-            this.cards[i].flip();
-            this.cards[cardId].flip();
+            setTimeout(function(){
+              self.cards[i].flip();
+              self.cards[cardId].flip();
+              self.lock = false;
+              console.log("Damos la vuelta a las cartas");
+            },1000);
           }
         }
       }
+
     }
   };
 };
@@ -96,6 +103,8 @@ MemoryGameCard = function(id) {
         break;
       case 'down':
         this.state = 'up';
+        break;
+      case 'found':
         break;
     }
   };
