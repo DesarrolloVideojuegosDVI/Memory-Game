@@ -7,6 +7,10 @@ var MemoryGame = MemoryGame || {};
 
 /**
  * Constructora de MemoryGame
+ *
+ *
+ *
+ * 
  */
 MemoryGame = function(gs) {
   this.gs = gs;
