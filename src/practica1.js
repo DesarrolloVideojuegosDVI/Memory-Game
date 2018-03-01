@@ -46,35 +46,37 @@ MemoryGame = function(gs) {
     var self = this;
     let foundOne = false;
 
-    if (!this.finished && !this.lock) {
-      this.lock = true;
-      this.cards[cardId].flip();
+    if (!this.finished && !this.lock && cardId != null) {
+      if(cardId < 16 && cardId > -1 && this.cards[cardId].state === 'down'){
+        this.lock = true;
+        this.cards[cardId].flip();
 
-      if (this.flipped === -1) {
-        this.flipped = cardId;
-        this.lock = false;
-      } else {
-        if (this.cards[this.flipped].compareTo(this.cards[cardId])) {
-          this.cards[this.flipped].found();
-          this.cards[cardId].found();
-          ++this.countFounded;
-          this.message = 'Match found!';
-          this.flipped = -1;
+        if (this.flipped === -1) {
+          this.flipped = cardId;
           this.lock = false;
-
-          if (this.countFounded >= 8) {
-            this.finished = true;
-            this.message = 'You Win!!';
-          }
         } else {
-          this.message = 'Try again';
+          if (this.cards[this.flipped].compareTo(this.cards[cardId])) {
+            this.cards[this.flipped].found();
+            this.cards[cardId].found();
+            ++this.countFounded;
+            this.message = 'Match found!';
+            this.flipped = -1;
+            this.lock = false;
 
-          setTimeout(function() {
-            self.cards[self.flipped].flip();
-            self.cards[cardId].flip();
-            self.flipped = -1;
-            self.lock = false;
-          }, 1000);
+            if (this.countFounded >= 8) {
+              this.finished = true;
+              this.message = 'You Win!!';
+            }
+          } else {
+            this.message = 'Try again';
+
+            setTimeout(function() {
+              self.cards[self.flipped].flip();
+              self.cards[cardId].flip();
+              self.flipped = -1;
+              self.lock = false;
+            }, 1000);
+          }
         }
       }
     }
